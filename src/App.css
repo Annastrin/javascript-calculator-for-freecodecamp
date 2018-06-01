@@ -1,28 +1,73 @@
-.App {
-  text-align: center;
+.calculator {  
+  margin-top: 70px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 20px;
+  padding-top: 10px;
+  width: 400px;    
+  background: linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+  border-radius: 10px;
+  box-shadow: 10px 10px 5px #333333;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+p {
+  margin: 0;
+  text-align: center;  
+  font-size: 18px;
+  font-weight: bold;  
+}
+#p1 {  
+  padding-right: 5px;
+  text-align: right; 
+  line-height: 70px;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 36px;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
+.calc-display {
+  width: 330px;
+  height: 70px;
+  background-color: #c7c5af;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 5px;
+}
+
+.grid-container {
+  display: grid;
+  width: 350px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;  
+  grid-template-columns: auto auto auto auto auto;  
+}
+
+.grid-item {
+  background-color: black;
   color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;  
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-.App-title {
-  font-size: 1.5em;
+.equal-sign {  
+  grid-column: 5 / 6;
+  grid-row: 3 / 5;
 }
 
-.App-intro {
-  font-size: large;
+.equal-sign>p {
+  margin: 0px;
+  line-height: 76px;
+  vertical-align: middle;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes pressing-operator {
+    0% {color: black;}
+    33% {color: #c7c5af;}
+    100% {color: black;}
 }
