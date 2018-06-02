@@ -66,15 +66,7 @@ class Calculator extends Component {
   }
 
   showFinalResult() {    
-<<<<<<< HEAD
     this.doOperation(undefined);    
-=======
-    this.doOperation(undefined);
-    let finalResult = this.state.result;
-    this.setState({       
-      currentNumber: finalResult      
-    });
->>>>>>> 3738344d6dd1ddddb5a84a3237acefac1dff30f5
   }
   
   allClean() {    
