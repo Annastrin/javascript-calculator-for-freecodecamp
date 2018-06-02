@@ -15,8 +15,9 @@ class Calculator extends Component {
                   currentOperation: undefined,
                   result: undefined};    
     this.inputNumber = this.inputNumber.bind(this);
-    this.allClean = this.allClean.bind(this);
-    this.doOperation = this.doOperation.bind(this);    
+    this.doOperation = this.doOperation.bind(this);
+    this.showFinalResult = this.showFinalResult.bind(this);
+    this.allClean = this.allClean.bind(this);        
   }
   
   inputNumber(newNumber) {    
@@ -33,15 +34,7 @@ class Calculator extends Component {
       mode: 'numberPressed',
       currentNumber: currentNumber
     });      
-  }
-  
-  allClean() {    
-    this.setState({
-      mode: 'numberPressed',
-      currentNumber: undefined,     
-      result: undefined
-    });    
-  }
+  }  
   
   doOperation(currentOperation) {
     // what has to happen, if I press operator two times (or more) in a row    
@@ -70,7 +63,23 @@ class Calculator extends Component {
         result: result
       });   
     }      
-  }  
+  }
+
+  showFinalResult() {    
+    this.doOperation(undefined);
+    let finalResult = this.state.result;
+    this.setState({       
+      currentNumber: finalResult      
+    });
+  }
+  
+  allClean() {    
+    this.setState({
+      mode: 'numberPressed',
+      currentNumber: undefined,     
+      result: undefined
+    });    
+  }
    
   render () {    
     return (
