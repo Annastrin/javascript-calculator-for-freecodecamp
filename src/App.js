@@ -97,7 +97,7 @@ class Calculator extends Component {
           <Number onClick={this.inputNumber}>2</Number>
           <Number onClick={this.inputNumber}>3</Number>
           <Button onClick={this.doOperation} operation={addition}>+</Button>
-          <Button onclick={this.showFinalResult} className="grid-item equal-sign"><p>=</p></Button>
+          <Button onClick={this.showFinalResult} className="grid-item equal-sign"><p>=</p></Button>
           <Number onClick={this.inputNumber}>0</Number>
           <Number onClick={this.inputNumber}>00</Number>
           <Number onClick={this.inputNumber}>.</Number>
