@@ -23,11 +23,11 @@ class Calculator extends Component {
   inputNumber(newNumber) {    
     const displayLength = 14;
     let currentNumber = this.state.currentNumber;    
-    if (currentNumber === undefined || this.state.mode === 'operatorPressed') {
+    if ((currentNumber === undefined || this.state.mode === "operatorPressed") && !(newNumber === '0' || newNumber === '00')) {
       currentNumber = newNumber;
     } else {
       if (currentNumber.length < displayLength) {
-        currentNumber += newNumber;
+        currentNumber = newNumber === '00' && currentNumber.length === 13 ? currentNumber + '0' : currentNumber + newNumber;
       }      
     }       
     this.setState({
@@ -39,10 +39,13 @@ class Calculator extends Component {
   doOperation(currentOperation) {
     // what has to happen, if I press operator two times (or more) in a row    
     if (this.state.currentNumber === undefined && currentOperation === subtraction) {
-      this.inputNumber('-');  
-      this.setState({
-        mode: 'numberPressed'      
-      });      
+      this.inputNumber('-');            
+    } else if (this.state.mode === "operatorPressed") {
+      if (this.state.currentOperation !== currentOperation)
+        this.setState({
+          mode: "operatorPressed",
+          currentOperation: currentOperation,
+        });         
     } else {
       let result = this.state.result;
       let operation = this.state.currentOperation;      
@@ -72,7 +75,8 @@ class Calculator extends Component {
   allClean() {    
     this.setState({
       mode: 'numberPressed',
-      currentNumber: undefined,     
+      currentNumber: undefined,
+      currentOperation: undefined,     
       result: undefined
     });    
   }
