@@ -10,11 +10,13 @@ const division = (accumulator, currentValue) => accumulator / currentValue;
 class Calculator extends Component {
   constructor(props) {
     super(props);
-    this.state = {mode: 'numberPressed',                  
+    this.state = {mode: 'numberPressed',
+                  decimal: false,                  
                   currentNumber: undefined,                  
                   currentOperation: undefined,
                   result: undefined};    
     this.inputNumber = this.inputNumber.bind(this);
+    this.inputDecimalPoint = this.inputDecimalPoint.bind(this);
     this.doOperation = this.doOperation.bind(this);
     this.showFinalResult = this.showFinalResult.bind(this);
     this.allClean = this.allClean.bind(this);        
@@ -34,12 +36,29 @@ class Calculator extends Component {
       mode: 'numberPressed',
       currentNumber: currentNumber
     });      
-  }  
+  }
   
-  doOperation(currentOperation) {
-    // what has to happen, if I press operator two times (or more) in a row    
+  inputDecimalPoint() {
+    if (this.state.decimal === true) {
+      this.setState({
+        mode: "numberPressed"              
+      });      
+    } else {
+      this.inputNumber(".");
+      this.setState({
+        decimal: true              
+      });
+    }
+  }
+  
+  doOperation(currentOperation) {        
     if (this.state.currentNumber === undefined && currentOperation === subtraction) {
       this.inputNumber('-');            
+    } else if (this.state.currentNumber === "-" &&
+      currentOperation === subtraction) {
+      this.setState({
+        mode: "numberPressed"              
+      });
     } else if (this.state.mode === "operatorPressed") {
       if (this.state.currentOperation !== currentOperation)
         this.setState({
@@ -75,6 +94,7 @@ class Calculator extends Component {
   allClean() {    
     this.setState({
       mode: 'numberPressed',
+      decimal: false,
       currentNumber: undefined,
       currentOperation: undefined,     
       result: undefined
@@ -104,7 +124,7 @@ class Calculator extends Component {
           <Button onClick={this.showFinalResult} className="grid-item equal-sign"><p>=</p></Button>
           <Number onClick={this.inputNumber}>0</Number>
           <Number onClick={this.inputNumber}>00</Number>
-          <Number onClick={this.inputNumber}>.</Number>
+          <Number onClick={this.inputDecimalPoint}>.</Number>
           <Button onClick={this.doOperation} operation={subtraction}>-</Button>                  
         </div>
       </div>
