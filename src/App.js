@@ -25,8 +25,10 @@ class Calculator extends Component {
   inputNumber(newNumber) {    
     const displayLength = 14;
     let currentNumber = this.state.currentNumber;    
-    if ((currentNumber === undefined || this.state.mode === "operatorPressed") && !(newNumber === '0' || newNumber === '00')) {
+    if ((currentNumber === undefined || currentNumber === '0' || this.state.mode === "operatorPressed") && !(newNumber === '0' || newNumber === '00')) {
       currentNumber = newNumber;
+    } else if ((currentNumber === undefined || currentNumber === '0' || this.state.mode === "operatorPressed") && (newNumber === '0' || newNumber === '00')) {
+      currentNumber = '0';
     } else {
       if (currentNumber.length < displayLength) {
         currentNumber = newNumber === '00' && currentNumber.length === 13 ? currentNumber + '0' : currentNumber + newNumber;
@@ -34,7 +36,7 @@ class Calculator extends Component {
     }       
     this.setState({
       mode: 'numberPressed',
-      currentNumber: currentNumber
+      currentNumber: currentNumber      
     });      
   }
   
@@ -44,7 +46,11 @@ class Calculator extends Component {
         mode: "numberPressed"              
       });      
     } else {
-      this.inputNumber(".");
+      if (this.state.currentNumber === undefined || this.state.mode === "operatorPressed") {
+        this.inputNumber("0.");
+      } else {
+        this.inputNumber(".");
+      }      
       this.setState({
         decimal: true              
       });
@@ -52,35 +58,39 @@ class Calculator extends Component {
   }
   
   doOperation(currentOperation) {        
-    if (this.state.currentNumber === undefined && currentOperation === subtraction) {
+    if (this.state.currentNumber === undefined && currentOperation === subtraction) { // если первой кнопкой нажат минус
       this.inputNumber('-');            
-    } else if (this.state.currentNumber === "-" &&
+    } else if (this.state.currentNumber === "-" && // если минус нажат первой кнопкой несколько раз
       currentOperation === subtraction) {
       this.setState({
         mode: "numberPressed"              
       });
-    } else if (this.state.mode === "operatorPressed") {
-      if (this.state.currentOperation !== currentOperation)
+    } else if (this.state.mode === "operatorPressed") { // если оператор уже был нажат
+      if (this.state.currentOperation !== currentOperation) { // и сейчас нажат другой оператор
         this.setState({
           mode: "operatorPressed",
-          currentOperation: currentOperation,
-        });         
+          currentOperation: currentOperation, // то запомни новый оператор
+        });
+      }                  
     } else {
       let result = this.state.result;
       let operation = this.state.currentOperation;      
       if (result === undefined && operation === undefined) {
-        result = this.state.currentNumber;      
-      } else if (result !== undefined && operation !== undefined) {
-        let prevNum = result; 
-        prevNum = parseInt(prevNum, 10);
-        let currNum = this.state.currentNumber;
-        currNum = parseInt(currNum, 10); 
+        result = this.state.currentNumber || '0';      
+      } else if (result !== undefined && operation !== undefined) {        
+        let prevNum = result;         
+        prevNum = parseFloat(prevNum);        
+        let currNum = this.state.currentNumber;         
+        currNum = parseFloat(currNum);
         result = [prevNum, currNum].reduce(operation);        
         result = result.toString();
-      }      
+      } else {
+        result = this.state.currentNumber;
+      }     
       operation = currentOperation;
       this.setState({
         mode: 'operatorPressed',
+        decimal: false,
         currentOperation: operation,
         result: result
       });   
@@ -150,6 +160,9 @@ class Display extends Component {
         animationDuration: '0.1s'
       };
       displayOutput = this.props.result;
+      if (displayOutput.length > 14) {
+        displayOutput = displayOutput.slice(0, 14);
+      }
     }    
     return(
       <div className="calc-display">
