@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 const addition = (accumulator, currentValue) => accumulator + currentValue;
@@ -19,7 +18,8 @@ class Calculator extends Component {
     this.inputDecimalPoint = this.inputDecimalPoint.bind(this);
     this.doOperation = this.doOperation.bind(this);
     this.showFinalResult = this.showFinalResult.bind(this);
-    this.allClean = this.allClean.bind(this);        
+    this.allClean = this.allClean.bind(this); 
+    this.clearEntry = this.clearEntry.bind(this);       
   }
   
   inputNumber(newNumber) {    
@@ -46,7 +46,7 @@ class Calculator extends Component {
         mode: "numberPressed"              
       });      
     } else {
-      if (this.state.currentNumber === undefined || this.state.mode === "operatorPressed") {
+      if (this.state.currentNumber === undefined || this.state.currentNumber === '0' || this.state.mode === "operatorPressed") {
         this.inputNumber("0.");
       } else {
         this.inputNumber(".");
@@ -82,8 +82,12 @@ class Calculator extends Component {
         prevNum = parseFloat(prevNum);        
         let currNum = this.state.currentNumber;         
         currNum = parseFloat(currNum);
-        result = [prevNum, currNum].reduce(operation);        
-        result = result.toString();
+        result = [prevNum, currNum].reduce(operation);
+        if (result > 99999999999999) {
+          result = result.toExponential(4);
+        } else {
+          result = result.toString();
+        }          
       } else {
         result = this.state.currentNumber;
       }     
@@ -110,6 +114,26 @@ class Calculator extends Component {
       result: undefined
     });    
   }
+
+  clearEntry() {
+    if (this.state.mode === 'numberPressed') {      
+      let currentNumber = this.state.currentNumber;
+      let newNumber;
+      if (currentNumber !== undefined && currentNumber.length > 1) {
+        newNumber = currentNumber.slice(0, -1);        
+      } else {
+        newNumber = undefined;
+      }
+      this.setState({
+        currentNumber: newNumber
+      });
+    } else {      
+      this.setState({
+        mode: 'numberPressed',
+        currentOperation: undefined
+      });
+    }
+  }
    
   render () {    
     return (
@@ -126,7 +150,7 @@ class Calculator extends Component {
           <Number onClick={this.inputNumber}>5</Number>
           <Number onClick={this.inputNumber}>6</Number> 
           <Button onClick={this.doOperation} operation={multiplication}>&#215;</Button>
-          <Button>CE</Button>
+          <Button onClick={this.clearEntry}>CE</Button>
           <Number onClick={this.inputNumber}>1</Number>
           <Number onClick={this.inputNumber}>2</Number>
           <Number onClick={this.inputNumber}>3</Number>
@@ -143,22 +167,16 @@ class Calculator extends Component {
 }
 
 class Display extends Component {    
-  render() {
-    let outputStyle;
+  render() {    
     let displayMode = this.props.mode;
     let displayOutput;
     if (displayMode === 'numberPressed') {      
-      outputStyle = {color: 'black'};
       if (this.props.number === undefined) {
         displayOutput = '0';
       } else {
         displayOutput = this.props.number;
       }      
-    } else {      
-      outputStyle = {
-        animationName: 'pressing-operator',
-        animationDuration: '0.1s'
-      };
+    } else {        
       displayOutput = this.props.result;
       if (displayOutput.length > 14) {
         displayOutput = displayOutput.slice(0, 14);
@@ -166,7 +184,7 @@ class Display extends Component {
     }    
     return(
       <div className="calc-display">
-        <p id="p1" style={outputStyle}>{displayOutput}</p>        
+        <p id="p1">{displayOutput}</p>        
       </div>      
     );
   }
