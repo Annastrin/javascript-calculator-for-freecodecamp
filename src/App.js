@@ -127,11 +127,8 @@ class Calculator extends Component {
       this.setState({
         currentNumber: newNumber
       });
-    } else {      
-      this.setState({
-        mode: 'numberPressed',
-        currentOperation: undefined
-      });
+    } else { 
+      this.allClean();      
     }
   }
    
@@ -178,7 +175,9 @@ class Display extends Component {
       }      
     } else {        
       displayOutput = this.props.result;
-      if (displayOutput.length > 14) {
+      if (displayOutput === undefined) {
+        displayOutput = '0';
+      } else if (displayOutput.length > 14) {
         displayOutput = displayOutput.slice(0, 14);
       }
     }    
